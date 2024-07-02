@@ -5,6 +5,8 @@ build: tccopy.cpp tcpaste.cpp
 	g++ tcclear.cpp -lterminalclipboard -o build/tcclear
 
 buildlib: lib/libterminalclipboard.cpp
+
+
 	mkdir -p build-lib
 	g++ -shared lib/libterminalclipboard.cpp -o build-lib/libterminalclipboard.so -fPIC
 

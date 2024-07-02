@@ -8,12 +8,12 @@ namespace TerminalClipboard
 {
     const int SIZE_LEN = sizeof(int);
 
-    void SetClipboard(unsigned char data[], int size)
+    void SetClipboard(unsigned char data[], int size, std::string board = "default")
     {
-
-        shared_memory_object::remove("terminalclipboard");
+        string boardName = "terminalclipboard-" + board;
+        shared_memory_object::remove(boardName.c_str());
         shared_memory_object tclip(create_only,
-                                   "terminalclipboard",
+                                   boardName.c_str(),
                                    read_write);
         tclip.truncate(SIZE_LEN + size);
 
@@ -30,10 +30,11 @@ namespace TerminalClipboard
         }
     }
 
-    void GetClipboard(unsigned char *data)
+    void GetClipboard(unsigned char *data, std::string board = "default")
     {
+        string boardName = "terminalclipboard-" + board;
         shared_memory_object tclip(open_only,
-                                   "terminalclipboard",
+                                   boardName.c_str(),
                                    read_only);
 
         mapped_region sizeReg(tclip, read_only, 0, SIZE_LEN);
@@ -47,12 +48,13 @@ namespace TerminalClipboard
         }
     }
 
-    int GetClipboardSize()
+    int GetClipboardSize(std::string board = "default")
     {
+        string boardName = "terminalclipboard-" + board;
         try
         {
             shared_memory_object tclip(open_only,
-                                       "terminalclipboard",
+                                       boardName.c_str(),
                                        read_only);
 
             mapped_region sizeReg(tclip, read_only, 0, SIZE_LEN);
@@ -65,8 +67,9 @@ namespace TerminalClipboard
         }
     }
 
-    void ClearClipboard()
+    void ClearClipboard(std::string board = "default")
     {
-        shared_memory_object::remove("terminalclipboard");
+        string boardName = "terminalclipboard-" + board;
+        shared_memory_object::remove(boardName.c_str());
     }
 }
